@@ -1,0 +1,767 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2113.65">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Apple SD Gothic Neo'}
+    p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'PingFang SC'}
+    span.s1 {font: 12.0px 'Apple SD Gothic Neo'}
+    span.s2 {font: 12.0px 'Apple Color Emoji'}
+    span.s3 {font: 12.0px Helvetica}
+    span.s4 {font: 12.0px 'Zapf Dingbats'}
+    span.s5 {font: 12.0px 'Lucida Grande'}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="ko"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1">&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1">&lt;meta name="viewport" content="width=device-width,initial-scale=1"&gt;</p>
+<p class="p1">&lt;title&gt;<span class="s1">우쿨렐레</span> <span class="s1">악보</span> <span class="s1">편집기</span>&lt;/title&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;style&gt;</p>
+<p class="p1">:root{--ink:#1a1410;--paper:#fff;--warm:#f8f4ee;--rule:#ccc;--amber:#b8620a;--muted:#8a7d6e}</p>
+<p class="p1">*{box-sizing:border-box;margin:0;padding:0}</p>
+<p class="p1">body{background:#f0ead8;color:var(--ink);font-family:-apple-system,Helvetica Neue,Arial,sans-serif;min-height:100vh;display:flex;flex-direction:column}</p>
+<p class="p2"><br></p>
+<p class="p1">/* ── <span class="s1">헤더</span> ── */</p>
+<p class="p1">header{background:#1a1410;color:#faf7f2;padding:.8rem 1.4rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;position:sticky;top:0;z-index:50}</p>
+<p class="p1">.logo{font-family:Georgia,serif;font-size:1.1rem;font-weight:700;color:#e07c1a}</p>
+<p class="p1">.hact{margin-left:auto;display:flex;gap:.45rem;flex-wrap:wrap;align-items:center}</p>
+<p class="p1">.btn{font-family:Menlo,monospace;font-size:.65rem;padding:.38rem .85rem;border-radius:4px;cursor:pointer;border:1.5px solid transparent;transition:all .14s}</p>
+<p class="p1">.btn-p{background:#b8620a;color:#fff;border-color:#b8620a;font-weight:700}</p>
+<p class="p1">.btn-p:hover{background:#e07c1a}</p>
+<p class="p1">.btn-g{background:transparent;border-color:#3a3028;color:#c8b89a}</p>
+<p class="p1">.btn-g:hover{border-color:#e07c1a;color:#e07c1a}</p>
+<p class="p1">.btn-sm{font-size:.6rem;padding:.25rem .6rem}</p>
+<p class="p2"><br></p>
+<p class="p1">/* ── <span class="s1">편집</span> <span class="s1">영역</span> ── */</p>
+<p class="p1">.editor{display:grid;grid-template-columns:260px 1fr;flex:1;gap:0}</p>
+<p class="p2"><br></p>
+<p class="p1">/* ── <span class="s1">왼쪽</span>: <span class="s1">코드</span> <span class="s1">팔레트</span> ── */</p>
+<p class="p1">.palette{background:#f5ede0;border-right:1px solid #d8cfc0;padding:1rem;display:flex;flex-direction:column;gap:.8rem;overflow-y:auto}</p>
+<p class="p1">.ptitle{font-family:Menlo,monospace;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:#8a7d6e;border-bottom:1px solid #d8cfc0;padding-bottom:.35rem}</p>
+<p class="p1">.chord-palette{display:flex;flex-wrap:wrap;gap:.5rem}</p>
+<p class="p1">.pc{background:#fff;border:1.5px solid #d8cfc0;border-radius:6px;padding:5px 6px 4px;cursor:pointer;transition:all .13s;text-align:center;user-select:none}</p>
+<p class="p1">.pc:hover{border-color:#b8620a;transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.1)}</p>
+<p class="p1">.pc.drag{opacity:.5}</p>
+<p class="p1">.pc-name{font-family:Georgia,serif;font-size:.95rem;font-weight:700;color:#1a1410;line-height:1.1}</p>
+<p class="p1">.pc-tens{font-family:Menlo,monospace;font-size:.5rem;color:#b8620a}</p>
+<p class="p1">.empty-p{font-family:Menlo,monospace;font-size:.7rem;color:#d8cfc0;text-align:center;padding:1rem}</p>
+<p class="p2"><br></p>
+<p class="p1">/* ── <span class="s1">오른쪽</span>: <span class="s1">악보</span> <span class="s1">편집</span> ── */</p>
+<p class="p1">.score-edit{padding:1rem 1.2rem;overflow-y:auto;display:flex;flex-direction:column;gap:.7rem}</p>
+<p class="p2"><br></p>
+<p class="p1">/* <span class="s1">악보</span> <span class="s1">설정</span> <span class="s1">바</span> */</p>
+<p class="p1">.score-meta{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;background:#fff;border:1px solid #d8cfc0;border-radius:6px;padding:.6rem .8rem}</p>
+<p class="p1">.score-meta label{font-family:Menlo,monospace;font-size:.58rem;color:#8a7d6e;letter-spacing:.08em}</p>
+<p class="p1">.score-meta input,.score-meta select{font-family:-apple-system,Helvetica Neue,Arial,sans-serif;font-size:.78rem;border:1px solid #d8cfc0;border-radius:4px;padding:.28rem .5rem;background:#faf7f2;color:#1a1410;outline:none}</p>
+<p class="p1">.score-meta input:focus,.score-meta select:focus{border-color:#b8620a}</p>
+<p class="p1">.stitle-in{width:180px!important}</p>
+<p class="p2"><br></p>
+<p class="p1">/* <span class="s1">악보</span> <span class="s1">행</span> */</p>
+<p class="p1">.score-rows{display:flex;flex-direction:column;gap:.5rem}</p>
+<p class="p1">.score-row{background:#fff;border:1px solid #d8cfc0;border-radius:6px;padding:.5rem .6rem;position:relative}</p>
+<p class="p1">.row-label{font-family:Menlo,monospace;font-size:.55rem;color:#b0a090;margin-bottom:.3rem}</p>
+<p class="p2"><br></p>
+<p class="p1">/* <span class="s1">마디</span> <span class="s1">편집</span> <span class="s1">행</span> */</p>
+<p class="p1">.measures-edit{display:flex;gap:4px;align-items:stretch}</p>
+<p class="p1">.measure-edit{flex:1;border:1.5px solid #e0d8cc;border-radius:5px;padding:5px 5px 4px;background:#fdf9f4;display:flex;flex-direction:column;gap:3px;min-width:0;position:relative}</p>
+<p class="p1">.measure-edit.highlight{border-color:#b8620a;background:#fff8f0}</p>
+<p class="p1">.me-chord-row{display:flex;align-items:center;gap:3px}</p>
+<p class="p1">.me-chord-sel{flex:1;font-family:Menlo,monospace;font-size:.56rem;background:#fff;border:1px solid #d8cfc0;border-radius:3px;padding:.18rem .3rem;color:#1a1410;outline:none;min-width:0}</p>
+<p class="p1">.me-diag{flex-shrink:0}</p>
+<p class="p1">.me-lyric{width:100%;font-family:-apple-system,Helvetica Neue,Arial,sans-serif;font-size:.78rem;background:#fff;border:1px solid #d8cfc0;border-radius:3px;padding:.2rem .4rem;color:#1a1410;outline:none}</p>
+<p class="p1">.me-lyric:focus{border-color:#b8620a}</p>
+<p class="p1">.me-del{position:absolute;top:2px;right:3px;background:transparent;border:none;color:#d8cfc0;font-size:.65rem;cursor:pointer;line-height:1;padding:1px}</p>
+<p class="p1">.me-del:hover{color:#cc3333}</p>
+<p class="p1">.me-num{font-family:Menlo,monospace;font-size:.5rem;color:#c0b0a0;margin-bottom:1px}</p>
+<p class="p2"><br></p>
+<p class="p1">/* row <span class="s1">조작</span> <span class="s1">버튼</span> */</p>
+<p class="p1">.row-actions{display:flex;gap:.35rem;margin-top:.3rem;justify-content:flex-end}</p>
+<p class="p2"><br></p>
+<p class="p1">/* ── <span class="s1">프리뷰</span> <span class="s1">패널</span> ── */</p>
+<p class="p1">#previewPanel{display:none;background:#f0ead8;padding:1rem 1.2rem}</p>
+<p class="p1">#previewPanel.show{display:block}</p>
+<p class="p1">.preview-info{font-family:-apple-system,Helvetica Neue,Arial,sans-serif;font-size:.75rem;color:#b8620a;font-weight:700;margin-bottom:6px}</p>
+<p class="p2"><br></p>
+<p class="p1">/* ── <span class="s1">진행</span> <span class="s1">오버레이</span> ── */</p>
+<p class="p1">.pov{display:none;position:fixed;inset:0;background:rgba(14,10,8,.8);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:.8rem}</p>
+<p class="p1">.pov.show{display:flex}</p>
+<p class="p1">.pspinner{width:34px;height:34px;border:3px solid #2a2018;border-top-color:#e07c1a;border-radius:50%;animation:spin .7s linear infinite}</p>
+<p class="p1">.pmsg2{font-family:Menlo,monospace;font-size:.72rem;color:#c8b89a}</p>
+<p class="p1">@keyframes spin{to{transform:rotate(360deg)}}</p>
+<p class="p1">@media(max-width:640px){.editor{grid-template-columns:1fr}.palette{border-right:none;border-bottom:1px solid #d8cfc0;max-height:200px}}</p>
+<p class="p1">&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="pov" id="pov"&gt;&lt;div class="pspinner"&gt;&lt;/div&gt;&lt;div class="pmsg2" id="pmsg"&gt;<span class="s1">생성</span> <span class="s1">중</span>...&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;header&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="logo"&gt;<span class="s2">🎵</span> <span class="s1">악보</span> <span class="s1">편집기</span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="hact"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button class="btn btn-g" onclick="addRow()"&gt;<span class="s1">＋</span> <span class="s1">행</span> <span class="s1">추가</span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button class="btn btn-p" onclick="genPreview()"&gt;<span class="s2">🖼</span> <span class="s1">악보</span> <span class="s1">미리보기</span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/header&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="editor"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- <span class="s1">코드</span> <span class="s1">팔레트</span> --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="palette"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="ptitle"&gt;<span class="s1">코드</span> <span class="s1">팔레트</span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="ptitle" style="margin-top:.3rem;border:none;padding:0;font-size:.54rem;color:#b0a090"&gt;<span class="s1">탭해서</span> <span class="s1">마디에</span> <span class="s1">추가</span> · <span class="s1">드래그도</span> <span class="s1">가능</span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="chord-palette" id="chordPalette"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="empty-p"&gt;<span class="s1">코드</span> <span class="s1">빌더에서</span> <span class="s1">코드를</span>&lt;br&gt;<span class="s1">먼저</span> <span class="s1">만들어주세요</span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="ptitle" style="margin-top:.5rem"&gt;<span class="s1">직접</span> <span class="s1">코드명</span> <span class="s1">입력</span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div style="display:flex;gap:.4rem;align-items:center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;input type="text" id="manualChordName" placeholder="<span class="s1">예</span>: Am7, G, F#m"</p>
+<p class="p1"><span class="Apple-converted-space">        </span>style="flex:1;font-family:Menlo,monospace;font-size:.75rem;padding:.3rem .5rem;border:1px solid #d8cfc0;border-radius:4px;background:#fff;color:#1a1410;outline:none"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="btn btn-p btn-sm" onclick="addManualChord()"&gt;<span class="s1">추가</span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div style="font-family:Menlo,monospace;font-size:.54rem;color:#b0a090;margin-top:.2rem"&gt;</p>
+<p class="p3"><span class="s3"><span class="Apple-converted-space">      </span></span>다이어그램<span class="s3"> </span>없이<span class="s3"> </span>코드명만<span class="s3"> </span>표시됩니다</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- <span class="s1">미니</span> <span class="s1">다이어그램</span> <span class="s1">편집기</span> --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="ptitle" style="margin-top:.6rem"&gt;<span class="s1">다이어그램</span> <span class="s1">직접</span> <span class="s1">그리기</span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="miniEditorWrap" style="background:#fff;border:1px solid #d8cfc0;border-radius:6px;padding:7px"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="display:flex;gap:.4rem;align-items:center;margin-bottom:5px;flex-wrap:wrap"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="text" id="miniChordName" placeholder="<span class="s1">코드명</span> (<span class="s1">예</span>: Am)"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>style="width:80px;font-family:Menlo,monospace;font-size:.72rem;padding:.25rem .4rem;border:1px solid #d8cfc0;border-radius:3px;background:#faf7f2;color:#1a1410;outline:none"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;select id="miniStartFret" style="font-family:Menlo,monospace;font-size:.65rem;padding:.22rem .3rem;border:1px solid #d8cfc0;border-radius:3px;background:#faf7f2;color:#1a1410;outline:none"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="1"&gt;1fr&lt;/option&gt;&lt;option value="2"&gt;2fr&lt;/option&gt;&lt;option value="3"&gt;3fr&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="4"&gt;4fr&lt;/option&gt;&lt;option value="5"&gt;5fr&lt;/option&gt;&lt;option value="7"&gt;7fr&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="9"&gt;9fr&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/select&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="btn btn-sm" data-m="dot" onclick="setMiniMode('dot',this)" style="background:#1a1410;color:#fff;border-color:#1a1410"&gt;●<span class="s1">점</span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="btn btn-sm" data-m="tension" onclick="setMiniMode('tension',this)" style="background:transparent;border-color:#d8cfc0;color:#8a7d6e"&gt;T<span class="s1">텐션</span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="btn btn-sm" data-m="erase" onclick="setMiniMode('erase',this)" style="background:transparent;border-color:#d8cfc0;color:#8a7d6e"&gt;<span class="s4">✕</span><span class="s1">지우기</span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- <span class="s1">스트링</span> <span class="s1">오픈</span>/<span class="s1">뮤트</span> --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="display:flex;gap:4px;align-items:center;margin-bottom:4px"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;span style="font-family:Menlo,monospace;font-size:.55rem;color:#8a7d6e;min-width:28px"&gt;<span class="s1">스트링</span>&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="miniSSRow" style="display:flex;gap:4px"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- SVG <span class="s1">편집판</span> --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div id="miniSvgWrap" style="display:flex;justify-content:center"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="btn btn-p btn-sm" onclick="saveMiniChord()" style="width:100%;margin-top:5px;font-size:.65rem"&gt;<span class="s1">팔레트에</span> <span class="s1">추가</span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="btn btn-sm" onclick="clearMiniDots()" style="width:100%;margin-top:3px;font-size:.6rem;background:transparent;border-color:#d8cfc0;color:#8a7d6e"&gt;<span class="s1">초기화</span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- <span class="s1">악보</span> <span class="s1">편집</span> --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="score-edit"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- <span class="s1">메타</span> <span class="s1">설정</span> --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="score-meta"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;label&gt;<span class="s1">제목</span>&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;input class="stitle-in" type="text" id="scoreTitle" placeholder="<span class="s1">악보</span> <span class="s1">제목</span> (<span class="s1">예</span>: <span class="s1">헤픈</span> <span class="s1">우연</span>)"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;label&gt;<span class="s1">아티스트</span>&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;input type="text" id="scoreArtist" placeholder="<span class="s1">아티스트</span>" style="width:100px"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;label&gt;<span class="s1">박자</span>&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;select id="timeSig"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;option value="4"&gt;4/4&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;option value="3"&gt;3/4&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/select&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- <span class="s1">행들</span> --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="score-rows" id="scoreRows"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button class="btn btn-g" onclick="addRow()" style="align-self:flex-start"&gt;<span class="s1">＋</span> <span class="s1">행</span> <span class="s1">추가</span> (4<span class="s1">마디</span>)&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- <span class="s1">미리보기</span>/<span class="s1">저장</span> <span class="s1">이미지</span> <span class="s1">출력</span> --&gt;</p>
+<p class="p1">&lt;div id="previewPanel"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="preview-info"&gt;<span class="s5">↓</span> <span class="s1">이미지를</span> <span class="s1">꾹</span> <span class="s1">눌러</span> <span class="s5">→</span> <span class="s1">사진</span> <span class="s1">저장</span> / <span class="s1">파일에</span> <span class="s1">저장</span>&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;script&gt;</p>
+<p class="p4"><span class="s3">/* </span>════════════════════════════════</p>
+<p class="p3"><span class="s3"><span class="Apple-converted-space">   </span></span>우쿨렐레<span class="s3"> </span>다이어그램<span class="s3"> </span>상수</p>
+<p class="p4">════════════════════════════════<span class="s3"> */</span></p>
+<p class="p1">const STR=['A','E','C','G'], FC=4, PM=[3,5,7,10,12,15], DM=12;</p>
+<p class="p1">const SW=200,SH=110,ML=32,MR=10,MT=12,MB=28;</p>
+<p class="p1">const BW=SW-ML-MR,BH=SH-MT-MB,CW=BW/FC,RH=BH/3;</p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s3">/* </span>════════════════════════════════</p>
+<p class="p1"><span class="Apple-converted-space">   </span><span class="s1">데이터</span></p>
+<p class="p1"><span class="Apple-converted-space">   </span>chords: <span class="s1">팔레트에</span> <span class="s1">있는</span> <span class="s1">코드</span> <span class="s1">목록</span></p>
+<p class="p1"><span class="Apple-converted-space">   </span>rows: <span class="Apple-converted-space">  </span><span class="s1">행</span> <span class="s1">배열</span> — <span class="s1">각</span> <span class="s1">행은</span> measures 4<span class="s1">개</span></p>
+<p class="p1"><span class="Apple-converted-space">   </span>measure: { chordKey, lyric }</p>
+<p class="p4">════════════════════════════════<span class="s3"> */</span></p>
+<p class="p1">let chords = []; <span class="Apple-converted-space">  </span>// {key, name, hasDiag, dots, stringStates, startFret}</p>
+<p class="p1">let rows = []; <span class="Apple-converted-space">    </span>// [{measures:[{chordKey,lyric},...]}]</p>
+<p class="p2"><br></p>
+<p class="p1">// localStorage<span class="s1">에서</span> <span class="s1">코드</span> <span class="s1">빌더</span> <span class="s1">데이터</span> <span class="s1">불러오기</span> <span class="s1">시도</span></p>
+<p class="p1">function loadFromBuilder(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>try{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const raw = localStorage.getItem('uke_coll');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(raw){</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const coll = JSON.parse(raw);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>coll.forEach(e=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">        </span>chords.push({</p>
+<p class="p1"><span class="Apple-converted-space">          </span>key: e.id,</p>
+<p class="p1"><span class="Apple-converted-space">          </span>name: (e.root||'')+(e.qual||'')+(e.tensions&amp;&amp;e.tensions.length?' '+e.tensions.join(' '):''),</p>
+<p class="p1"><span class="Apple-converted-space">          </span>hasDiag: true,</p>
+<p class="p1"><span class="Apple-converted-space">          </span>dots: e.dots, stringStates: e.stringStates, startFret: e.startFret</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}catch(e){}</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s3">/* </span>════════════════════════════════</p>
+<p class="p1"><span class="Apple-converted-space">   </span>SVG <span class="s1">다이어그램</span> (<span class="s1">인라인</span> <span class="s1">소형</span>)</p>
+<p class="p4">════════════════════════════════<span class="s3"> */</span></p>
+<p class="p1">function mkSVG(dots, ss2, fr, w, h){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const sx=w/SW,sy=h/SH,ml=ML*sx,mt=MT*sy;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const bw=w-ml-MR*sx,bh=h-mt-MB*sy,cw=bw/FC,rh=bh/3;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const dr=7*sx,nw=4.5*sx;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const SY=s=&gt;mt+s*rh, FCX=f=&gt;ml+(f-.5)*cw, FLX=f=&gt;ml+f*cw;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>let o=`&lt;svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg"&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>o+=`&lt;rect width="${w}" height="${h}" fill="white"/&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(fr===1) o+=`&lt;rect x="${ml-nw}" y="${mt}" width="${nw}" height="${bh}" rx="1" fill="#111"/&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>else o+=`&lt;text x="${ml-2*sx}" y="${mt+bh*.5}" text-anchor="end" font-family="monospace" font-size="${7*sx}" fill="#888"&gt;${fr}fr&lt;/text&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>// <span class="s1">스트링</span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>for(let s=0;s&lt;4;s++){const y=SY(s);o+=`&lt;line x1="${ml}" y1="${y}" x2="${ml+bw}" y2="${y}" stroke="#222" stroke-width="${1.8*sx}"/&gt;`;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>// <span class="s1">프렛</span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>for(let f=1;f&lt;=FC;f++) o+=`&lt;line x1="${FLX(f)}" y1="${mt}" x2="${FLX(f)}" y2="${mt+bh}" stroke="#666" stroke-width="${1.5*sx}"/&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>o+=`&lt;line x1="${ml}" y1="${mt}" x2="${ml}" y2="${mt+bh}" stroke="#666" stroke-width="${0.8*sx}"/&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>// open/mute</p>
+<p class="p1"><span class="Apple-converted-space">  </span>for(let s=0;s&lt;4;s++){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const y=SY(s),st=ss2[s],sx2=ml-nw-4*sx;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(st==='open') o+=`&lt;circle cx="${sx2}" cy="${y}" r="${dr*.44}" fill="none" stroke="#3a7a3a" stroke-width="1.2"/&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>else if(st==='mute'){const d=dr*.36;o+=`&lt;line x1="${sx2-d}" y1="${y-d}" x2="${sx2+d}" y2="${y+d}" stroke="#cc3333" stroke-width="1.2"/&gt;&lt;line x1="${sx2+d}" y1="${y-d}" x2="${sx2-d}" y2="${y+d}" stroke="#cc3333" stroke-width="1.2"/&gt;`;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>// <span class="s1">포지션</span> <span class="s1">마커</span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>for(let f=1;f&lt;=FC;f++){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const af=fr+f-1; if(!PM.includes(af)) continue;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const x=FCX(f),y=mt+bh+18*sy,r=dr*.32;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(af===DM){const sp=dr*.5;o+=`&lt;circle cx="${x-sp}" cy="${y}" r="${r}" fill="#b0a090"/&gt;&lt;circle cx="${x+sp}" cy="${y}" r="${r}" fill="#b0a090"/&gt;`;}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>else o+=`&lt;circle cx="${x}" cy="${y}" r="${r}" fill="#b0a090"/&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>// <span class="s1">바레</span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>dots.filter(d=&gt;d.t==='barre').forEach(d=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const x=FCX(d.f),y1=SY(d.s),y2=SY(d.e);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>o+=`&lt;rect x="${x-dr}" y="${y1-dr}" width="${dr*2}" height="${y2-y1+dr*2}" rx="${dr}" fill="#111"/&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>o+=`&lt;text x="${x}" y="${(y1+y2)/2+3*sy}" text-anchor="middle" font-family="monospace" font-size="${7*sx}" fill="white" font-weight="700"&gt;${fr+d.f-1}&lt;/text&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>[{t:'dot',f:'#111'},{t:'tension',f:'#b8620a'}].forEach(({t,f})=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>dots.filter(d=&gt;d.t===t).forEach(d=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const x=FCX(d.f),y=SY(d.s);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>o+=`&lt;circle cx="${x}" cy="${y}" r="${dr}" fill="${f}"/&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>o+=`&lt;text x="${x}" y="${y+3*sy}" text-anchor="middle" font-family="monospace" font-size="${7*sx}" fill="white" font-weight="700"&gt;${fr+d.f-1}&lt;/text&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>return o+'&lt;/svg&gt;';</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s3">/* </span>════════════════════════════════</p>
+<p class="p1"><span class="Apple-converted-space">   </span>Canvas <span class="s1">다이어그램</span> (<span class="s1">이미지</span> <span class="s1">생성용</span>)</p>
+<p class="p4">════════════════════════════════<span class="s3"> */</span></p>
+<p class="p1">function drawDiagCanvas(chord, w, h){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const cv=document.createElement('canvas'); cv.width=w; cv.height=h;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const c=cv.getContext('2d');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const sx=w/SW,sy=h/SH,ml=ML*sx,mt=MT*sy;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const bw=w-ml-MR*sx,bh=h-mt-MB*sy,cw=bw/FC,rh=bh/3;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const dr=7*sx,nw=4.5*sx;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const fr=chord.startFret||1;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const SY=s=&gt;mt+s*rh, FCX=f=&gt;ml+(f-.5)*cw, FLX=f=&gt;ml+f*cw;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>c.fillStyle='#fff'; c.fillRect(0,0,w,h);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(fr===1){c.fillStyle='#111'; rrC(c,ml-nw,mt,nw,bh,1.5);c.fill();}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>else{c.fillStyle='#888';c.font=`${7*sx}px monospace`;c.textAlign='right';c.textBaseline='middle';c.fillText(fr+'fr',ml-2*sx,mt+bh*.5);}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>c.strokeStyle='#222';c.lineWidth=1.8*sx;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>for(let s=0;s&lt;4;s++){const y=SY(s);c.beginPath();c.moveTo(ml,y);c.lineTo(ml+bw,y);c.stroke();}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>c.strokeStyle='#666';c.lineWidth=1.5*sx;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>for(let f=1;f&lt;=FC;f++){const x=FLX(f);c.beginPath();c.moveTo(x,mt);c.lineTo(x,mt+bh);c.stroke();}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>c.lineWidth=0.8*sx;c.beginPath();c.moveTo(ml,mt);c.lineTo(ml,mt+bh);c.stroke();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>for(let s=0;s&lt;4;s++){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const y=SY(s),st=(chord.stringStates||[])[s]||'none',sx2=ml-nw-4*sx;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(st==='open'){c.strokeStyle='#3a7a3a';c.lineWidth=1.2;c.beginPath();c.arc(sx2,y,dr*.44,0,Math.PI*2);c.stroke();}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>else if(st==='mute'){const d=dr*.36;c.strokeStyle='#cc3333';c.lineWidth=1.2;c.beginPath();c.moveTo(sx2-d,y-d);c.lineTo(sx2+d,y+d);c.stroke();c.beginPath();c.moveTo(sx2+d,y-d);c.lineTo(sx2-d,y+d);c.stroke();}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>for(let f=1;f&lt;=FC;f++){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const af=fr+f-1;if(!PM.includes(af))continue;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const x=FCX(f),y=mt+bh+18*sy,r=dr*.32;c.fillStyle='#b0a090';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(af===DM){const sp=dr*.5;c.beginPath();c.arc(x-sp,y,r,0,Math.PI*2);c.fill();c.beginPath();c.arc(x+sp,y,r,0,Math.PI*2);c.fill();}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>else{c.beginPath();c.arc(x,y,r,0,Math.PI*2);c.fill();}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>(chord.dots||[]).filter(d=&gt;d.t==='barre').forEach(d=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const x=FCX(d.f),y1=SY(d.s),y2=SY(d.e);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>c.fillStyle='#111';rrC(c,x-dr,y1-dr,dr*2,y2-y1+dr*2,dr);c.fill();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>c.fillStyle='#fff';c.font=`bold ${7*sx}px monospace`;c.textAlign='center';c.textBaseline='middle';c.fillText(fr+d.f-1,x,(y1+y2)/2);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>[{t:'dot',f:'#111'},{t:'tension',f:'#b8620a'}].forEach(({t,f})=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>(chord.dots||[]).filter(d=&gt;d.t===t).forEach(d=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const x=FCX(d.f),y=SY(d.s);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>c.fillStyle=f;c.beginPath();c.arc(x,y,dr,0,Math.PI*2);c.fill();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>c.fillStyle='#fff';c.font=`bold ${7*sx}px monospace`;c.textAlign='center';c.textBaseline='middle';c.fillText(fr+d.f-1,x,y);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>return cv;</p>
+<p class="p1">}</p>
+<p class="p1">function rrC(ctx,x,y,w,h,r){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s3">/* </span>════════════════════════════════</p>
+<p class="p3"><span class="s3"><span class="Apple-converted-space">   </span></span>팔레트<span class="s3"> </span>렌더링</p>
+<p class="p4">════════════════════════════════<span class="s3"> */</span></p>
+<p class="p1">let selectedChordKey = null;</p>
+<p class="p2"><br></p>
+<p class="p1">function rendPalette(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const wrap = document.getElementById('chordPalette');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>wrap.innerHTML = '';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!chords.length){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>wrap.innerHTML='&lt;div class="empty-p"&gt;<span class="s1">아직</span> <span class="s1">코드가</span> <span class="s1">없습니다</span>.&lt;br&gt;<span class="s1">아래</span> <span class="s1">직접</span> <span class="s1">입력을</span> <span class="s1">사용하세요</span>.&lt;/div&gt;';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>chords.forEach(ch=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const div=document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>div.className='pc';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>div.dataset.key=ch.key;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>div.innerHTML=`&lt;div class="pc-name"&gt;${ch.name.split(' ')[0]}&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(ch.name.includes(' ')){</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const t=document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>t.className='pc-tens';t.textContent=ch.name.split(' ').slice(1).join(' ');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>div.appendChild(t);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(ch.hasDiag){</p>
+<p class="p1"><span class="Apple-converted-space">      </span>div.innerHTML+=mkSVG(ch.dots,ch.stringStates,ch.startFret,56,32);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>div.onclick=()=&gt;{ selectedChordKey=ch.key; rendPalette(); };</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(selectedChordKey===ch.key) div.style.borderColor='#b8620a';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>wrap.appendChild(div);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function addManualChord(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const nm=document.getElementById('manualChordName').value.trim();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!nm)return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('manualChordName').value='';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const key='m_'+Date.now();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>chords.push({key,name:nm,hasDiag:false,dots:[],stringStates:['none','none','none','none'],startFret:1});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>rendPalette();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s3">/* </span>════════════════════════════════</p>
+<p class="p1"><span class="Apple-converted-space">   </span><span class="s1">행</span>/<span class="s1">마디</span> <span class="s1">관리</span></p>
+<p class="p1"><span class="Apple-converted-space">   </span>measure: { chordKeys:[], lyric:'' }</p>
+<p class="p3"><span class="s3"><span class="Apple-converted-space">   </span></span>한<span class="s3"> </span>마디에<span class="s3"> </span>코드<span class="s3"> </span>여러<span class="s3"> </span>개<span class="s3"> </span>가능</p>
+<p class="p4">════════════════════════════════<span class="s3"> */</span></p>
+<p class="p1">function newMeasure(){ return {chordKeys:[''], lyric:''}; }</p>
+<p class="p2"><br></p>
+<p class="p1">function addRow(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>rows.push({measures:[newMeasure(),newMeasure(),newMeasure(),newMeasure()]});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>rendRows();</p>
+<p class="p1">}</p>
+<p class="p1">function delRow(ri){ rows.splice(ri,1); rendRows(); }</p>
+<p class="p1">function addMeasureToRow(ri){ rows[ri].measures.push(newMeasure()); rendRows(); }</p>
+<p class="p1">function delMeasure(ri,mi){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>rows[ri].measures.splice(mi,1);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!rows[ri].measures.length) rows.splice(ri,1);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>rendRows();</p>
+<p class="p1">}</p>
+<p class="p1">function addChordToMeasure(ri,mi){ rows[ri].measures[mi].chordKeys.push(''); rendRows(); }</p>
+<p class="p1">function removeChordFromMeasure(ri,mi,ci){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>rows[ri].measures[mi].chordKeys.splice(ci,1);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!rows[ri].measures[mi].chordKeys.length) rows[ri].measures[mi].chordKeys=[''];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>rendRows();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function rendRows(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const wrap=document.getElementById('scoreRows');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>wrap.innerHTML='';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!rows.length){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>wrap.innerHTML='&lt;div style="font-family:\'Menlo\',monospace;font-size:.72rem;color:#c0b0a0;padding:1rem;text-align:center"&gt;<span class="s1">「＋</span> <span class="s1">행</span> <span class="s1">추가」로</span> <span class="s1">악보를</span> <span class="s1">시작하세요</span>&lt;/div&gt;';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>rows.forEach((row,ri)=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const rowDiv=document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>rowDiv.className='score-row';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>rowDiv.innerHTML=`&lt;div class="row-label"&gt;<span class="s1">행</span> ${ri+1}&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const measWrap=document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>measWrap.className='measures-edit';</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>row.measures.forEach((m,mi)=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>// <span class="s1">마디</span> <span class="s1">내</span> <span class="s1">코드</span> <span class="s1">목록을</span> chordKeys <span class="s1">배열로</span> <span class="s1">통일</span></p>
+<p class="p1"><span class="Apple-converted-space">      </span>if(!m.chordKeys) m.chordKeys=[m.chordKey||''];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>const mDiv=document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>mDiv.className='measure-edit';</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// <span class="s1">마디</span> <span class="s1">번호</span></p>
+<p class="p1"><span class="Apple-converted-space">      </span>const mnum=document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>mnum.className='me-num';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>mnum.textContent=`${ri*4+mi+1}<span class="s1">마디</span>`;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>mDiv.appendChild(mnum);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// <span class="s1">코드</span> <span class="s1">목록</span> (<span class="s1">여러</span> <span class="s1">개</span>)</p>
+<p class="p1"><span class="Apple-converted-space">      </span>m.chordKeys.forEach((ck,ci)=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const crow=document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>crow.className='me-chord-row';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>crow.style.cssText='display:flex;align-items:center;gap:3px;margin-bottom:2px';</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// <span class="s1">셀렉트</span> — onchange<span class="s1">에서</span> rendRows <span class="s1">호출</span> <span class="s1">안</span> <span class="s1">함</span>, <span class="s1">상태만</span> <span class="s1">업데이트</span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const sel=document.createElement('select');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>sel.className='me-chord-sel';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>sel.innerHTML='&lt;option value=""&gt;— <span class="s1">없음</span> —&lt;/option&gt;'</p>
+<p class="p1"><span class="Apple-converted-space">          </span>+chords.map(c=&gt;`&lt;option value="${c.key}"${c.key===ck?' selected':''}&gt;${c.name}&lt;/option&gt;`).join('');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>sel.addEventListener('change', e=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">          </span>rows[ri].measures[mi].chordKeys[ci]=e.target.value;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>// <span class="s1">다이어그램</span> <span class="s1">미리보기만</span> <span class="s1">갱신</span></p>
+<p class="p1"><span class="Apple-converted-space">          </span>const dw=crow.querySelector('.me-diag');</p>
+<p class="p1"><span class="Apple-converted-space">          </span>if(dw) dw.remove();</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const nch=chords.find(c=&gt;c.key===e.target.value);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>if(nch&amp;&amp;nch.hasDiag){</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const dWrap=document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>dWrap.className='me-diag';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>dWrap.innerHTML=mkSVG(nch.dots,nch.stringStates,nch.startFret,48,28);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>crow.appendChild(dWrap);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>crow.appendChild(sel);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// <span class="s1">다이어그램</span> <span class="s1">미니</span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const ch=chords.find(c=&gt;c.key===ck);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if(ch&amp;&amp;ch.hasDiag){</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const dWrap=document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">          </span>dWrap.className='me-diag';</p>
+<p class="p1"><span class="Apple-converted-space">          </span>dWrap.innerHTML=mkSVG(ch.dots,ch.stringStates,ch.startFret,48,28);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>crow.appendChild(dWrap);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// <span class="s1">코드</span> <span class="s1">삭제</span> <span class="s1">버튼</span> (2<span class="s1">개</span> <span class="s1">이상일</span> <span class="s1">때만</span>)</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if(m.chordKeys.length&gt;1){</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const rmBtn=document.createElement('button');</p>
+<p class="p1"><span class="Apple-converted-space">          </span>rmBtn.style.cssText='font-size:.55rem;background:transparent;border:none;color:#d8cfc0;cursor:pointer;padding:0 2px;line-height:1';</p>
+<p class="p1"><span class="Apple-converted-space">          </span>rmBtn.textContent='<span class="s1">－</span>';</p>
+<p class="p1"><span class="Apple-converted-space">          </span>rmBtn.onclick=e=&gt;{e.stopPropagation();removeChordFromMeasure(ri,mi,ci);};</p>
+<p class="p1"><span class="Apple-converted-space">          </span>crow.appendChild(rmBtn);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>mDiv.appendChild(crow);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// <span class="s1">코드</span> <span class="s1">추가</span> <span class="s1">버튼</span></p>
+<p class="p1"><span class="Apple-converted-space">      </span>const addCBtn=document.createElement('button');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>addCBtn.style.cssText='font-family:\'Menlo\',monospace;font-size:.55rem;background:transparent;border:1px dashed #d8cfc0;color:#b0a090;border-radius:3px;padding:1px 5px;cursor:pointer;width:100%;margin-bottom:2px';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>addCBtn.textContent='<span class="s1">＋</span> <span class="s1">코드</span> <span class="s1">추가</span>';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>addCBtn.onclick=e=&gt;{e.stopPropagation();addChordToMeasure(ri,mi);};</p>
+<p class="p1"><span class="Apple-converted-space">      </span>mDiv.appendChild(addCBtn);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// <span class="s1">팔레트</span> <span class="s1">클릭으로</span> <span class="s1">코드</span> <span class="s1">삽입</span> (<span class="s1">첫</span> <span class="s1">번째</span> <span class="s1">빈</span> <span class="s1">슬롯에</span>)</p>
+<p class="p1"><span class="Apple-converted-space">      </span>mDiv.onclick=e=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if(['SELECT','OPTION','INPUT','BUTTON'].includes(e.target.tagName)) return;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if(!selectedChordKey) return;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const emptyIdx=m.chordKeys.findIndex(k=&gt;!k);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if(emptyIdx&gt;=0) m.chordKeys[emptyIdx]=selectedChordKey;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>else m.chordKeys.push(selectedChordKey);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>rendRows();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// <span class="s1">가사</span></p>
+<p class="p1"><span class="Apple-converted-space">      </span>const lyricIn=document.createElement('input');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>lyricIn.className='me-lyric';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>lyricIn.type='text';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>lyricIn.placeholder='<span class="s1">가사</span>...';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>lyricIn.value=m.lyric||'';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>lyricIn.oninput=e=&gt;{ rows[ri].measures[mi].lyric=e.target.value; };</p>
+<p class="p1"><span class="Apple-converted-space">      </span>mDiv.appendChild(lyricIn);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// <span class="s1">삭제</span></p>
+<p class="p1"><span class="Apple-converted-space">      </span>const del=document.createElement('button');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>del.className='me-del';del.textContent='<span class="s4">✕</span>';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>del.onclick=e=&gt;{e.stopPropagation();delMeasure(ri,mi);};</p>
+<p class="p1"><span class="Apple-converted-space">      </span>mDiv.appendChild(del);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>measWrap.appendChild(mDiv);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>rowDiv.appendChild(measWrap);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const acts=document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>acts.className='row-actions';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>acts.innerHTML=`</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="btn btn-g btn-sm" onclick="addMeasureToRow(${ri})"&gt;<span class="s1">＋</span> <span class="s1">마디</span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="btn btn-g btn-sm" style="color:#cc6633;border-color:#884422" onclick="delRow(${ri})"&gt;<span class="s1">행</span> <span class="s1">삭제</span>&lt;/button&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>rowDiv.appendChild(acts);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>wrap.appendChild(rowDiv);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s3">/* </span>════════════════════════════════</p>
+<p class="p3"><span class="s3"><span class="Apple-converted-space">   </span></span>악보<span class="s3"> </span>이미지<span class="s3"> </span>생성</p>
+<p class="p4">════════════════════════════════<span class="s3"> */</span></p>
+<p class="p1">async function genPreview(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!rows.length){alert('<span class="s1">악보가</span> <span class="s1">없습니다</span>.');return;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const pov=document.getElementById('pov');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const pmsg=document.getElementById('pmsg');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>pov.classList.add('show'); pmsg.textContent='<span class="s1">악보</span> <span class="s1">생성</span> <span class="s1">중</span>...';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>await tick();</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// A4 @ 150dpi: 1240 × 1754px</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const PW=1240, PH=1754, SCALE=1;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const LM=52, RM=52;<span class="Apple-converted-space">          </span>// <span class="s1">좌우</span> <span class="s1">마진</span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const TM=80, BM=60;<span class="Apple-converted-space">          </span>// <span class="s1">상하</span> <span class="s1">마진</span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const TITLE_H=80; <span class="Apple-converted-space">            </span>// <span class="s1">제목</span> <span class="s1">영역</span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const INNER_W=PW-LM-RM;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// <span class="s1">행</span> <span class="s1">레이아웃</span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const DIAG_W=56, DIAG_H=32;<span class="Apple-converted-space">  </span>// <span class="s1">다이어그램</span> <span class="s1">크기</span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const ABOVE=58; <span class="Apple-converted-space">              </span>// <span class="s1">기준선</span> <span class="s1">위</span> (<span class="s1">코드명</span>+<span class="s1">다이어그램</span>)</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const BELOW=26; <span class="Apple-converted-space">              </span>// <span class="s1">기준선</span> <span class="s1">아래</span> (<span class="s1">가사</span>)</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const ROW_H=ABOVE+BELOW+6;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const ROW_GAP=16;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const title=document.getElementById('scoreTitle').value||'<span class="s1">우쿨렐레</span> <span class="s1">악보</span>';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const artist=document.getElementById('scoreArtist').value||'';</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const cv=document.createElement('canvas');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>cv.width=PW; cv.height=PH;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const c=cv.getContext('2d');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// <span class="s1">배경</span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>c.fillStyle='#fff'; c.fillRect(0,0,PW,PH);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// <span class="s1">제목</span> — <span class="s1">가운데</span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>c.fillStyle='#1a1410';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>c.font=`bold 32px Georgia,serif`;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>c.textAlign='center'; c.textBaseline='middle';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>c.fillText(title, PW/2, TM+24);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// <span class="s1">아티스트</span> — <span class="s1">오른쪽</span>, <span class="s1">약간</span> <span class="s1">여백</span>(30px)</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(artist){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>c.font=`17px -apple-system,Helvetica Neue,Arial,sans-serif`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>c.fillStyle='#5a4a3a';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>c.textAlign='right';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>c.textBaseline='middle';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>c.fillText(artist, PW-120, TM+56);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>// <span class="s1">제목</span> <span class="s1">아래</span> <span class="s1">실선</span> <span class="s1">없음</span></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const startY=TM+TITLE_H;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>for(let ri=0;ri&lt;rows.length;ri++){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>pmsg.textContent=`<span class="s1">행</span> ${ri+1}/${rows.length} <span class="s1">렌더링</span>...`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>await tick();</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>const rowY=startY+ri*(ROW_H+ROW_GAP);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(rowY+ROW_H &gt; PH-BM) break; // <span class="s1">페이지</span> <span class="s1">넘침</span> <span class="s1">방지</span></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>const lineY=rowY+ABOVE;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const measures=rows[ri].measures;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const N=measures.length||1;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// ── <span class="s1">마디</span> <span class="s1">너비</span>: INNER_W<span class="s1">를</span> N<span class="s1">등분</span> (<span class="s1">완전</span> <span class="s1">균등</span>) ──</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const mW=INNER_W/N;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// <span class="s1">기준선</span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>c.strokeStyle='#1a1410'; c.lineWidth=1.8;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>c.beginPath();c.moveTo(LM,lineY);c.lineTo(LM+INNER_W,lineY);c.stroke();</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// <span class="s1">왼쪽</span> <span class="s1">세로선</span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>c.strokeStyle='#1a1410'; c.lineWidth=2.5;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>c.beginPath();c.moveTo(LM,lineY-ABOVE+4);c.lineTo(LM,lineY+14);c.stroke();</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>for(let mi=0;mi&lt;N;mi++){</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const m=measures[mi];</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if(!m.chordKeys) m.chordKeys=[m.chordKey||''];</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const mx=LM+mi*mW;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// <span class="s1">마디</span> <span class="s1">내</span> <span class="s1">코드들</span></p>
+<p class="p1"><span class="Apple-converted-space">      </span>const validKeys=m.chordKeys.filter(k=&gt;k);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const nCodes=validKeys.length||1;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const codeSlotW=mW/nCodes;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>validKeys.forEach((ck,ci)=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const ch=chords.find(c2=&gt;c2.key===ck);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if(!ch) return;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const cx=mx+ci*codeSlotW;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const cname=ch.name.split(' ')[0];</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const tens=ch.name.split(' ').slice(1).join(' ');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// <span class="s1">코드명</span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>c.fillStyle='#1a1410';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>c.font=`bold 15px Georgia,serif`;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>c.textAlign='left'; c.textBaseline='bottom';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>c.fillText(cname, cx+4, lineY-2);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// <span class="s1">텐션</span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>if(tens){</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const cnW=c.measureText(cname).width;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>c.fillStyle='#b8620a';</p>
+<p class="p1"><span class="Apple-converted-space">          </span>c.font=`bold 8px monospace`;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>c.fillText(tens, cx+4+cnW+2, lineY-10);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// <span class="s1">다이어그램</span> — <span class="s1">코드명</span> <span class="s1">위</span>, <span class="s1">기준선</span> <span class="s1">위에만</span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>if(ch.hasDiag){</p>
+<p class="p1"><span class="Apple-converted-space">          </span>c.font=`bold 15px Georgia,serif`;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const cnW=c.measureText(cname).width;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const diagX=cx+4+cnW+6;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const diagY=lineY-DIAG_H-2;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>// <span class="s1">다이어그램이</span> <span class="s1">다음</span> <span class="s1">코드</span> <span class="s1">슬롯을</span> <span class="s1">넘지</span> <span class="s1">않도록</span></p>
+<p class="p1"><span class="Apple-converted-space">          </span>const maxDW=Math.min(DIAG_W, codeSlotW-cnW-20);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>if(maxDW&gt;20){</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const dRatio=DIAG_H/DIAG_W;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const dcv=drawDiagCanvas(ch, maxDW*2, maxDW*2*dRatio);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>c.drawImage(dcv, diagX, diagY, maxDW, maxDW*dRatio);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// <span class="s1">코드</span> <span class="s1">없는</span> <span class="s1">마디도</span> <span class="s1">가사는</span> <span class="s1">표시</span></p>
+<p class="p1"><span class="Apple-converted-space">      </span>if(m.lyric){</p>
+<p class="p1"><span class="Apple-converted-space">        </span>c.fillStyle='#1a1410';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>c.font=`14px -apple-system,Helvetica Neue,Arial,sans-serif`;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>c.textAlign='left'; c.textBaseline='top';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>c.fillText(m.lyric, mx+4, lineY+8);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// <span class="s1">마디</span> <span class="s1">세로선</span></p>
+<p class="p1"><span class="Apple-converted-space">      </span>c.strokeStyle='#1a1410';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>c.lineWidth=mi===N-1 ? 2.5 : 1.2;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>c.beginPath();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>c.moveTo(mx+mW, lineY-ABOVE+4);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>c.lineTo(mx+mW, lineY+14);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>c.stroke();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>pov.classList.remove('show');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>const dataUrl=cv.toDataURL('image/jpeg',0.95);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const panel=document.getElementById('previewPanel');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>panel.classList.add('show');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const old=panel.querySelector('img');if(old)old.remove();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const img=new Image();img.src=dataUrl;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>img.style.cssText='max-width:100%;border-radius:6px;border:1px solid #d8cfc0;display:block;margin-top:4px';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>panel.appendChild(img);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>img.scrollIntoView({behavior:'smooth'});</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s3">/* </span>════════════════════════════════</p>
+<p class="p3"><span class="s3"><span class="Apple-converted-space">   </span></span>미니<span class="s3"> </span>다이어그램<span class="s3"> </span>편집기</p>
+<p class="p4">════════════════════════════════<span class="s3"> */</span></p>
+<p class="p1">let miniDots=[], miniMode='dot', miniSS=['none','none','none','none'];</p>
+<p class="p2"><br></p>
+<p class="p1">function setMiniMode(m,btn){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>miniMode=m;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.querySelectorAll('#miniEditorWrap .btn[data-m]').forEach(b=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>b.style.background='transparent';b.style.color='#8a7d6e';b.style.borderColor='#d8cfc0';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(m==='dot'){btn.style.background='#1a1410';btn.style.color='#fff';btn.style.borderColor='#1a1410';}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>else if(m==='tension'){btn.style.background='#b8620a';btn.style.color='#fff';btn.style.borderColor='#b8620a';}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>else{btn.style.background='#7a3a3a';btn.style.color='#fff';btn.style.borderColor='#7a3a3a';}</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function rendMiniSS(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const wrap=document.getElementById('miniSSRow'); wrap.innerHTML='';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const sym={none:'─',open:'<span class="s5">○</span>',mute:'<span class="s4">✕</span>'};</p>
+<p class="p1"><span class="Apple-converted-space">  </span>STR.forEach((s,i)=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const item=document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>item.style.cssText='display:flex;flex-direction:column;align-items:center;gap:2px';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>item.innerHTML=`&lt;span style="font-family:monospace;font-size:.5rem;color:#8a7d6e"&gt;${s}&lt;/span&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const btn=document.createElement('button');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>btn.style.cssText='width:22px;height:18px;border-radius:3px;border:1.5px solid #d8cfc0;background:#fff;font-size:.62rem;cursor:pointer;display:flex;align-items:center;justify-content:center;';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>btn.textContent=sym[miniSS[i]];</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(miniSS[i]==='open'){btn.style.color='#3a7a3a';btn.style.borderColor='#3a7a3a';}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>else if(miniSS[i]==='mute'){btn.style.color='#7a3a3a';btn.style.borderColor='#7a3a3a';}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>else{btn.style.color='#8a7d6e';}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>btn.onclick=()=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const o=['none','open','mute'];</p>
+<p class="p1"><span class="Apple-converted-space">      </span>miniSS[i]=o[(o.indexOf(miniSS[i])+1)%3];</p>
+<p class="p1"><span class="Apple-converted-space">      </span>rendMiniSS(); rendMiniSvg();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>};</p>
+<p class="p1"><span class="Apple-converted-space">    </span>item.appendChild(btn);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>wrap.appendChild(item);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function rendMiniSvg(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const fr=parseInt(document.getElementById('miniStartFret').value)||1;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const wrap=document.getElementById('miniSvgWrap');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>wrap.innerHTML=mkSVG(miniDots,miniSS,fr,160,90);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const svg=wrap.querySelector('svg');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>svg.style.cursor='crosshair';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>svg.addEventListener('click',onMiniClick);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function onMiniClick(ev){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const svg=ev.currentTarget;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const r=svg.getBoundingClientRect();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const px=(ev.clientX-r.left)*(SW/r.width);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const py=(ev.clientY-r.top)*(SH/r.height);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>// hit test</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(px&lt;ML||px&gt;ML+BW) return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const f=Math.floor((px-ML)/CW)+1;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(f&lt;1||f&gt;FC) return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>let bestS=-1,md=Infinity;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>for(let s=0;s&lt;4;s++){const d=Math.abs(py-(MT+s*RH));if(d&lt;md){md=d;bestS=s;}}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(md&gt;RH*.7) return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const cell={s:bestS,f};</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(miniMode==='erase'){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>miniDots=miniDots.filter(d=&gt;!(d.s===cell.s&amp;&amp;d.f===cell.f));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const idx=miniDots.findIndex(d=&gt;d.s===cell.s&amp;&amp;d.f===cell.f);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(idx&gt;=0) miniDots.splice(idx,1);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>else miniDots.push({s:cell.s,f:cell.f,t:miniMode==='tension'?'tension':'dot'});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>rendMiniSvg();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function clearMiniDots(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>miniDots=[];miniSS=['none','none','none','none'];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>rendMiniSS();rendMiniSvg();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function saveMiniChord(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const nm=document.getElementById('miniChordName').value.trim();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!nm){alert('<span class="s1">코드명을</span> <span class="s1">입력해주세요</span>.');return;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const fr=parseInt(document.getElementById('miniStartFret').value)||1;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const key='mini_'+Date.now();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>chords.push({</p>
+<p class="p1"><span class="Apple-converted-space">    </span>key, name:nm, hasDiag:true,</p>
+<p class="p1"><span class="Apple-converted-space">    </span>dots:JSON.parse(JSON.stringify(miniDots)),</p>
+<p class="p1"><span class="Apple-converted-space">    </span>stringStates:[...miniSS],</p>
+<p class="p1"><span class="Apple-converted-space">    </span>startFret:fr</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>rendPalette();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>// <span class="s1">초기화</span></p>
+<p class="p1"><span class="Apple-converted-space">  </span>miniDots=[];miniSS=['none','none','none','none'];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('miniChordName').value='';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>rendMiniSS();rendMiniSvg();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">document.getElementById('miniStartFret').onchange=rendMiniSvg;</p>
+<p class="p2"><br></p>
+<p class="p1">function tick(){return new Promise(r=&gt;requestAnimationFrame(()=&gt;requestAnimationFrame(r)));}</p>
+<p class="p2"><br></p>
+<p class="p4"><span class="s3">/* </span>════════════════════════════════</p>
+<p class="p1"><span class="Apple-converted-space">   </span><span class="s1">초기화</span></p>
+<p class="p4">════════════════════════════════<span class="s3"> */</span></p>
+<p class="p1">loadFromBuilder();</p>
+<p class="p1">rendPalette();</p>
+<p class="p1">rendRows();</p>
+<p class="p1">rendMiniSS();</p>
+<p class="p1">rendMiniSvg();</p>
+<p class="p1">&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
